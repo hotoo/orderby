@@ -1,0 +1,25 @@
+{
+  "name": "@hotoo/orderby",
+  "version": "1.0.0",
+  "description": "SQL like order by",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "should": "^13.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hotoo/orderby.git"
+  },
+  "keywords": [
+    "SQL",
+    "order",
+    "by"
+  ],
+  "author": "闲耘 <hotoo.cn@gmail.com>",
+  "license": "MIT"
+}
