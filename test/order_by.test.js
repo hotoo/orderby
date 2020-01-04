@@ -199,6 +199,24 @@ describe('test/order_by.test.js', () => {
         { s: '1', s2: '3' },
       ]);
     });
+
+    it('order by same list', () => {
+      const list = [
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+      ];
+      const result = list.sort(order.by('s desc', 's2 desc'));
+      result.should.eql([
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+        { s: '1', s2: '2' },
+      ]);
+    });
   });
 
   describe('order.by() complex', () => {
@@ -255,6 +273,107 @@ describe('test/order_by.test.js', () => {
         { n: 1, s: '3' },
       ]);
     });
+
+    it('order by complex number and string desc and null', () => {
+      const list = [
+        { n: 1, s: '3', date: '2019-12-17T04:04:20.000Z', nil: null },
+        { n: 3, s: '2', date: '2019-12-26T07:36:57.000Z', nil: null },
+        { n: 2, s: '1', date: '2019-12-19T09:05:20.000Z', nil: null },
+        { n: 3, s: '1', date: '2019-12-19T09:05:20.000Z', nil: null },
+        { n: 2, s: '3', date: '2019-12-18T09:05:20.000Z', nil: 2 },
+        { n: 2, s: '2', date: '2019-12-30T09:05:20.000Z', nil: 1 },
+      ];
+      const result = list.sort(order.by('nil', 'date desc', 'n'));
+      result.should.eql([
+        { n: 2, s: '2', date: '2019-12-30T09:05:20.000Z', nil: 1 },
+        { n: 2, s: '3', date: '2019-12-18T09:05:20.000Z', nil: 2 },
+        { n: 3, s: '2', date: '2019-12-26T07:36:57.000Z', nil: null },
+        { n: 2, s: '1', date: '2019-12-19T09:05:20.000Z', nil: null },
+        { n: 3, s: '1', date: '2019-12-19T09:05:20.000Z', nil: null },
+        { n: 1, s: '3', date: '2019-12-17T04:04:20.000Z', nil: null },
+      ]);
+    });
+
+    it('order by complex real', () => {
+      const list = [
+        {
+          'activityId': 'S-20191212',
+          'gameStartDate': '2019-12-12T07:00:00.000Z',
+          'orderRankNo': null,
+          'gmtCreate': '2019-12-26T07:36:57.000Z', // 真皮
+        },
+        {
+          'activityId': 'S-20191212',
+          'gameStartDate': '2019-12-12T07:00:00.000Z',
+          'orderRankNo': null,
+          'gmtCreate': '2019-12-19T09:05:20.000Z',
+        },
+        {
+          'activityId': 'S-20191212',
+          'gameStartDate': '2019-12-12T07:00:00.000Z',
+          'orderRankNo': null,
+          'gmtCreate': '2019-12-17T04:04:20.000Z',
+        },
+      ];
+      const result = list.sort(order.by('gameStartDate DESC', 'activityId', 'orderRankNo', 'gmtCreate DESC'));
+      result.should.eql([
+        {
+          'activityId': 'S-20191212',
+          'gameStartDate': '2019-12-12T07:00:00.000Z',
+          'orderRankNo': null,
+          'gmtCreate': '2019-12-26T07:36:57.000Z', // 真皮
+        },
+        {
+          'activityId': 'S-20191212',
+          'gameStartDate': '2019-12-12T07:00:00.000Z',
+          'orderRankNo': null,
+          'gmtCreate': '2019-12-19T09:05:20.000Z',
+        },
+        {
+          'activityId': 'S-20191212',
+          'gameStartDate': '2019-12-12T07:00:00.000Z',
+          'orderRankNo': null,
+          'gmtCreate': '2019-12-17T04:04:20.000Z',
+        },
+      ]);
+    });
   });
 
+  describe('order.by RULE ERROR', () => {
+    it('rule error', () => {
+      const list = [
+        { n: 1 },
+        { n: 3 },
+        { n: 2 },
+      ];
+      let err = 0;
+      try {
+        const result = list.sort(order.by('n ABC'));
+        err = 1;
+      } catch(ex) {
+        err = 2;
+        ex.message.should.equal('[order.by] rule error: n ABC');
+      }
+      err.should.equal(2);
+    });
+  });
+
+  describe('order.by NOT FOUND CLOUMN NAME', () => {
+    it('cloumn name error', () => {
+      const list = [
+        { n: 1 },
+        { n: 3 },
+        { n: 2 },
+      ];
+      let err = 0;
+      try {
+        const result = list.sort(order.by('__NOT_EXIST__'));
+        err = 1;
+      } catch(ex) {
+        err = 2;
+        ex.message.should.equal('[order.by] not found "__NOT_EXIST__" in data');
+      }
+      err.should.equal(2);
+    });
+  });
 });

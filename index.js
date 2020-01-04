@@ -13,24 +13,9 @@
  * @author 冒顿
  * @version 2017-05-31
  */
+const compare = require('./compare');
 
 const RE_ORDER_BY_RULE = /^([^\s]+)(?:\s+(ASC|DESC))?$/i;
-function _order(a, b) {
-  const typeA = typeof a;
-  const typeB = typeof b;
-  if (typeA === 'number' && typeB === 'number') {
-    const order = a - b;
-    if (order > 0) {
-      return 1;
-    }
-    if (order < 0) {
-      return -1;
-    }
-    return 0;
-  }
-  return String(a).localeCompare(String(b));
-
-}
 
 /**
  * list.sort(orderBy('columnA DESC','columnB'))
@@ -42,7 +27,7 @@ function orderBy() {
     const rule = arguments[i];
     const m = RE_ORDER_BY_RULE.exec(rule);
     if (!m || !m[1]) {
-      throw new Error('order by rule error: ' + rule);
+      throw new Error('[order.by] rule error: ' + rule);
     }
     rules.push([
       m[1],
@@ -58,9 +43,9 @@ function orderBy() {
         throw new Error('[order.by] not found "' + columnName + '" in data');
       }
       if (rule[1] === 'ASC') {
-        order = _order(a[columnName], b[columnName]);
+        order = compare(a[columnName], b[columnName]);
       } else { // DESC
-        order = _order(b[columnName], a[columnName]);
+        order = compare(b[columnName], a[columnName]);
       }
       if (order !== 0) {
         return order;
