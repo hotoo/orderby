@@ -4,7 +4,7 @@
   "description": "SQL like order by",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc --reporter=lcov --reporter=text mocha"
   },
   "devDependencies": {
     "mocha": "^6.2.0",
