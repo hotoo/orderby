@@ -9,7 +9,7 @@ const {
   isRegExp,
   isString,
   isUndefined,
-} = require('./util.js');
+} = require('./util');
 
 /**
  * 一维排序算法。
@@ -19,25 +19,17 @@ const {
  *                  如果 a 要排在 b 之后，返回 1
  *                  如果 a 和 b 相等，返回 0
  *                  特殊的，对于有 null 或 undefined 的情况：
- *                  1. null === undefined
- *                  2. null < 任何有效值
- *                  3. undefined < 任何有效值
+ *
+ *                  任何有效值 < null < undefined
+ *
  *                  如果你需要将某些反向设计的特殊值（如 -1，0 等）
  *                  排到正常值（如1，2等）之后，可以将特殊值处理为 null
  */
 function compare(a, b) {
-  if (isNull(a) || isUndefined(a)) {
-    if (isNull(b) || isUndefined(b)) {
-      // a 和 b 均为 null 或 undefined
-      return 0;
-    } else {
-      // 只有 a 为 null 或 undefined，b 有值，b 排前面。
-      return 1;
-    }
-  }
-  if (isNull(b) || isUndefined(b)) {
-    // 只有 b 为 null 或 undefined，a 有值，a 排前面。
-    return -1;
+  if (isUndefined(a) || isUndefined(b) || isNull(a) || isNull(b)) {
+    const la = specialValue(a);
+    const lb = specialValue(b);
+    return compareNumbers(la, lb);
   }
 
   // 以下为 a 和 b 均不为 null 或 undefined。
@@ -70,6 +62,25 @@ function compare(a, b) {
   return compareStrings(String(a), String(b));
 }
 
+/**
+ * 将特殊值（undefined, null）转换为数值进行排序。
+ * undefined < null < value
+ * @param {Object} value 需要处理的特殊值。
+ * @return {Number}
+ */
+function specialValue(value) {
+  if (isUndefined(value)) return 2;
+  if (isNull(value)) return 1;
+  return 0;
+}
+
+/**
+ * 比较数值。
+ *
+ * @param {Number} a 比较对象 a
+ * @param {Number} b 比较对象 b
+ * @return {Number} 比较结果。
+ */
 function compareNumbers(a, b) {
   if (isNaN(a) && isNaN(b)) {
     return 0
@@ -114,7 +125,6 @@ function compareStrings(a, b) {
   // "A".localeCompare('a') === 1
   // 用 localeCompare 时 A > a，不符合预期
   //! return a.localeCompare(b);
-
 }
 
 function regexp2string(reg) {

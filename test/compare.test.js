@@ -82,8 +82,8 @@ describe('test/compare.test', function() {
     [ 'MIX Date', null, new Date(), 1],
 
     [ 'Null', null, null, 0],
-    [ 'MIX Null', null, undefined, 0],
-    [ 'MIX Null', undefined, null, 0],
+    [ 'MIX Null', null, undefined, -1],
+    [ 'MIX Null', undefined, null, 1],
     [ 'MIX Null', null, 0, 1],
     [ 'MIX Null', null, 1, 1],
     [ 'MIX Null', null, '1', 1],
@@ -107,7 +107,7 @@ describe('test/compare.test', function() {
     [ 'MIX Null', function(){}, null, -1],
 
     [ 'MIX Undefined', undefined, undefined, 0],
-    [ 'MIX Undefined', undefined, null, 0],
+    [ 'MIX Undefined', undefined, null, 1],
     [ 'MIX Undefined', undefined, 0, 1],
     [ 'MIX Undefined', undefined, 1, 1],
     [ 'MIX Undefined', undefined, '1', 1],

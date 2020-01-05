@@ -14,6 +14,7 @@
  * @version 2017-05-31
  */
 const compare = require('./compare');
+const { isUndefined } = require('./util');
 
 const RE_ORDER_BY_RULE = /^([^\s]+)(?:\s+(ASC|DESC))?$/i;
 
@@ -39,7 +40,7 @@ function orderBy() {
       const rule = rules[i];
       const columnName = rule[0];
       let order;
-      if (typeof a[columnName] === 'undefined' || typeof b[columnName] === 'undefined') {
+      if (isUndefined(a[columnName]) || isUndefined(b[columnName])) {
         throw new Error('[order.by] not found "' + columnName + '" in data');
       }
       if (rule[1] === 'ASC') {
