@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.0.1 (2020-01-09)
+
+- feat: undefined > null > otherValues
+
 ## v2.0.0 (2020-01-04)
 
 - 实现了完整的基本类型比较。

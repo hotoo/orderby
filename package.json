@@ -1,6 +1,6 @@
 {
   "name": "@hotoo/orderby",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "SQL like order by",
   "main": "index.js",
   "scripts": {
